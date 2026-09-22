@@ -1,0 +1,1045 @@
+/* ============================================
+   Villa Rustica — shared stylesheet
+   Every page links to this one file, so a
+   change here updates the whole site at once.
+
+   Design idea: alternating dark/light full-width
+   sections, big editorial serif headlines, no
+   icons or shadowed cards. Quiet and personal,
+   not "corporate brochure".
+   ============================================ */
+
+:root {
+  /* Brand green sampled directly from the real Villa Rustica logo file. */
+  --brand-green: #59853f;
+  --ink: #212818;          /* dark olive, used for nav/footer/dark sections */
+  --ink-soft: #2a3323;
+  --paper: #f7f3ea;        /* warm off-white, used for light sections */
+  --paper-alt: #eceae6;   /* neutral warm gray — no yellow or green cast */
+  --text: #201b12;         /* body text on paper */
+  --text-invert: #f3efe4;  /* body text on ink */
+  --muted: #837a5f;        /* eyebrow labels, secondary text on paper */
+  --muted-invert: #a6ac93; /* secondary text on ink */
+  --accent: var(--brand-green);   /* accent on light backgrounds */
+  --accent-invert: #8fc46a;       /* lighter green, readable on dark backgrounds */
+  --line-light: rgba(0, 0, 0, 0.14);
+  --line-dark: rgba(255, 255, 255, 0.18);
+  --max-width: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* No "scroll-behavior: smooth" here — the browser's version
+   is too fast over a page this long. script.js drives anchor
+   scrolling instead, with a pace it controls. */
+
+body {
+  margin: 0;
+  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  line-height: 1.65;
+  background: var(--paper);
+}
+
+h1, h2, h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  line-height: 1.2;
+  font-weight: 600;
+  margin: 0 0 0.4em 0;
+}
+
+/* Playfair Display's "&" is a fancy script swash — plain and
+   more legible in the body's sans-serif instead, for the couple
+   of headings that use one. */
+.plain-amp {
+  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+p {
+  margin: 0 0 1em 0;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.eyebrow {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 1em;
+}
+
+.section-dark .eyebrow {
+  color: var(--muted-invert);
+}
+
+/* ---------- Header / Nav ---------- */
+
+.site-header {
+  background: var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  transition: box-shadow 0.3s ease;
+}
+
+/* script.js adds this once you've scrolled past the hero,
+   so the bar reads as "floating" above the content below it */
+.site-header.scrolled {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.nav {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 22px 32px;
+  display: grid;
+  /* logo | centered links | empty column the same width as
+     the logo's column, so the links land on the true center
+     of the bar instead of hugging the right edge */
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  justify-self: start;
+}
+
+.logo img {
+  height: 58px;
+  width: auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-self: center;
+  /* On a narrow screen these wrap onto more than one line —
+     without this, a wrapped line sits flush left instead of
+     lining up with the centered line(s) above it. */
+  justify-content: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted-invert);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-invert);
+}
+
+/* ---------- Hero (full-bleed, dark overlay) ---------- */
+
+.hero {
+  position: relative;
+  /* The first thing visitors see — fills the rest of the screen
+     under the sticky header, photo first, details (stats,
+     products...) only once they scroll. --header-height is
+     measured live by script.js (updateHeaderHeightVar) instead
+     of a hardcoded guess, since the header's real height shifts
+     whenever its own content/sizing changes. */
+  min-height: calc(100vh - var(--header-height, 102px));
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden; /* keeps the zoomed photo below from spilling out */
+  color: var(--text-invert);
+  padding: 48px 32px 56px 32px;
+}
+
+/* The photo lives on this pseudo-element (not ".hero" itself)
+   so it can be scaled up slowly without also scaling the
+   text sitting on top of it. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background-image: linear-gradient(180deg, rgba(20, 23, 15, 0.35) 0%, rgba(20, 23, 15, 0.85) 100%),
+              repeating-linear-gradient(120deg, #3b4530, #3b4530 22px, #333c29 22px, #333c29 44px);
+  background-size: cover;
+  background-position: center;
+  animation: hero-zoom 22s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+/* Home page only — the other pages still use the
+   placeholder pattern above until they get their own photo. */
+.hero-home::before {
+  background-image: linear-gradient(180deg, rgba(20, 23, 15, 0.35) 0%, rgba(20, 23, 15, 0.85) 100%),
+              url("assets/hero.jpg");
+}
+
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.09); }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+  /* fades/slides up once, the moment the page loads */
+  animation: hero-in 0.9s ease both;
+}
+
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  z-index: 1;
+  transform: translateX(-50%);
+  color: var(--text-invert);
+  text-decoration: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  opacity: 0.8;
+  animation: scroll-cue-bounce 2s ease-in-out infinite;
+}
+
+.scroll-cue:hover {
+  opacity: 1;
+}
+
+@keyframes scroll-cue-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none;
+  }
+
+  .scroll-cue {
+    animation: none;
+  }
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  color: #fff;
+  max-width: 780px;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  max-width: 560px;
+  color: var(--text-invert);
+}
+
+.hero-caption {
+  position: absolute;
+  z-index: 1;
+  bottom: 18px;
+  left: 32px;
+  right: 32px;
+  text-align: right;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  padding: 56px 32px;
+}
+
+/* A soft ambient glow in the accent green, so the dark
+   stretch at the top of the page has some depth to it
+   instead of reading as one flat block of near-black. */
+.glow-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-section::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: -25%;
+  right: -10%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(143, 196, 106, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+.glow-section::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: -30%;
+  left: -10%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(143, 196, 106, 0.1), transparent 70%);
+  pointer-events: none;
+}
+
+.glow-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.section.tight {
+  padding: 36px 32px;
+}
+
+/* Products and Markets use ".tight" (36px top padding), but
+   Contact doesn't — so jumping to it from the nav landed its
+   heading noticeably farther from the header than the other
+   two. Matching just the top here (not the bottom, which still
+   wants its own spacing under the contact card) keeps the
+   nav-jump distance consistent across all three targets. */
+#contact {
+  padding-top: 36px;
+}
+
+.section-light {
+  background: var(--paper);
+  color: var(--text);
+}
+
+.section-alt {
+  background: var(--paper-alt);
+  color: var(--text);
+}
+
+.section-dark {
+  background: var(--ink);
+  color: var(--text-invert);
+}
+
+.section h2 {
+  font-size: 2.3rem;
+}
+
+/* sub-headings within a section (product names, "Speak With
+   Our Export Manager") — smaller than a section's own h2 */
+.section h3 {
+  font-size: 1.6rem;
+}
+
+.section-dark h2,
+.section-dark h3 {
+  color: #fff;
+}
+
+.center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Split layout (photo + text) ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.split.reverse .split-photo {
+  order: 2;
+}
+
+/* A centered, muted intro line under a section heading —
+   reused by Products, Markets, and anywhere else that
+   needs one. */
+.section-intro {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+/* ---------- Product comparison grid ---------- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.product-card {
+  background: var(--paper);
+  border: 1px solid var(--line-light);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 28px rgba(32, 27, 18, 0.09);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(32, 27, 18, 0.1);
+}
+
+.product-card h3 {
+  margin-top: 20px;
+}
+
+/* The plum/grape photos have their background removed
+   (transparent PNG), so they just sit on the page directly —
+   no cropping box like ".photo" uses for regular photography. */
+.fruit-photo {
+  width: 100%;
+  max-width: 220px;
+  max-height: 220px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .fruit-photo {
+  transform: scale(1.05);
+}
+
+/* Text on the left, photo (or logo) on the right — the
+   image is shown at its natural aspect ratio, just scaled
+   down, so nothing gets cropped. Stacks on narrow screens. */
+.timeline-card--photo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.timeline-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-photo {
+  width: 200px;
+  height: auto;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: block;
+}
+
+/* ---------- Plain definition list (no icons, no boxes) ---------- */
+
+.spec-list {
+  margin: 1.5em 0;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--line-light);
+}
+
+.section-dark .spec-list {
+  border-top-color: var(--line-dark);
+}
+
+.spec-list .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-light);
+}
+
+.section-dark .spec-list .row {
+  border-bottom-color: var(--line-dark);
+}
+
+.spec-list dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spec-list dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* ---------- Link row (Products/Markets) ---------- */
+
+.link-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.link-row-item {
+  border-top: 1px solid var(--line-light);
+  padding-top: 20px;
+}
+
+.section-dark .link-row-item {
+  border-top-color: var(--line-dark);
+}
+
+.link-row-item h3 {
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+}
+
+.link-row-item a {
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+}
+
+.section-dark .link-row-item a {
+  color: var(--accent-invert);
+  border-bottom-color: var(--accent-invert);
+}
+
+/* ---------- Buttons ---------- */
+
+.button {
+  display: inline-block;
+  border: 1px solid currentColor;
+  color: inherit;
+  text-decoration: none;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.section-dark .button:hover {
+  background: #fff;
+  color: var(--ink);
+}
+
+.section-light .button:hover,
+.section-alt .button:hover {
+  background: var(--ink);
+  color: var(--text-invert);
+}
+
+.link-row-item a {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.link-row-item a:hover {
+  transform: translateX(4px);
+}
+
+/* ---------- Contact ---------- */
+
+.contact-email {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-light);
+  /* An email address has no spaces to wrap on, so on a
+     narrow screen it can end up wider than the container
+     and overflow to one side instead of staying centered —
+     let it break mid-word as a last resort. */
+  overflow-wrap: anywhere;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.contact-address {
+  margin-top: 36px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.person-card {
+  background: var(--paper);
+  border: 1px solid var(--line-light);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 10px 28px rgba(32, 27, 18, 0.09);
+}
+
+.person-card h3 {
+  font-size: 1.4rem;
+  margin: 6px 0 18px 0;
+}
+
+.person-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-light);
+}
+
+.person-links a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-light);
+  width: fit-content;
+}
+
+.person-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
+/* ---------- Timeline ---------- */
+
+.timeline {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--line-dark);
+}
+
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 0%;
+  background: var(--text-invert);
+  /* no transition here on purpose — it's updated on every
+     scroll event already, so animating on top of that just
+     makes it lag behind the real scroll position */
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 48px;
+  padding-bottom: 56px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -5px;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 1px solid var(--text-invert);
+}
+
+.timeline-year {
+  display: block;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.timeline-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--line-dark);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.timeline-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-invert);
+  margin-bottom: 6px;
+}
+
+.timeline-card p {
+  color: var(--muted-invert);
+  margin: 0;
+  max-width: 480px;
+}
+
+/* ---------- Stat row (35 ha, 2,000 t, etc.) ---------- */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 32px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.stat-number {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2.6rem;
+  color: #fff;
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-invert);
+  margin-top: 6px;
+}
+
+/* ---------- Name section ---------- */
+
+.name-heading {
+  font-size: 2.4rem;
+  color: var(--ink);
+}
+
+@media (max-width: 800px) {
+  .name-heading {
+    font-size: 2rem;
+  }
+}
+
+/* ---------- Tagline under hero ---------- */
+
+.tagline {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  color: var(--accent-invert);
+  margin-top: 18px;
+}
+
+/* ---------- Reveal-on-scroll ----------
+   script.js adds ".reveal" to headings, quotes,
+   spec lists and card/list groups, then adds
+   ".visible" once each one scrolls into view. */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-inner {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Europe export map ----------
+   A real, cropped map of Europe (assets/europe-map.svg,
+   fetched and injected by script.js). Every country in
+   that file has an id like "de", "at" — our 8 markets
+   get class="market" and Moldova gets class="origin",
+   both added by the same one-time processing that
+   cropped the file (see assets/originals/ for the source).
+   script.js then draws the animated routes on top. */
+
+/* The card the map itself sits inside — without this it
+   just reads as a flat picture dropped into the page. */
+.map-panel {
+  background: var(--paper);
+  border: 1px solid var(--line-light);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 660px;
+  margin: 0 auto;
+  box-shadow: 0 10px 28px rgba(32, 27, 18, 0.09);
+}
+
+.europe-map {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.europe-map svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* clips to the cropped viewBox — without this, the whole
+     uncropped map (all of Europe/Asia/Africa) renders and
+     spills out over the page content around it */
+  overflow: hidden;
+}
+
+/* Higher specificity than the map file's own embedded
+   ".c { fill: #c0c0c0 }" rule, so ours wins with no
+   !important needed. ".market"/".origin" are added after
+   this in the file, so they win over plain ".c" too. */
+.europe-map path.c {
+  fill: #e7e0cd;
+  stroke: var(--paper);
+  stroke-width: 0.6;
+}
+
+.europe-map path.market,
+.europe-map path.origin {
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.europe-map path.market {
+  fill: var(--accent);
+}
+
+.europe-map path.origin {
+  fill: var(--ink);
+}
+
+.europe-map path.market:hover,
+.europe-map path.origin:hover {
+  filter: brightness(1.3);
+}
+
+/* The line + travelling arrow script.js draws from
+   Moldova to each market, on top of the map. */
+.route-line {
+  fill: none;
+  stroke: rgba(32, 27, 18, 0.35);
+  stroke-width: 1;
+  stroke-linecap: round; /* smooth tip while the line is drawing in/out */
+}
+
+.route-arrow {
+  /* deliberately not the brand green — it'd disappear
+     against the highlighted (also green) countries */
+  fill: var(--ink);
+}
+
+.market-caption {
+  max-width: 560px;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Link inside the "Today" timeline card pointing down to
+   the full map in the Markets section. */
+.timeline-map-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--text-invert);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.timeline-map-link:hover {
+  border-bottom-color: var(--text-invert);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  background: var(--ink);
+  color: var(--muted-invert);
+  padding: 56px 32px 40px 32px;
+  text-align: center;
+}
+
+.site-footer a {
+  color: var(--text-invert);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.site-footer p {
+  margin: 0 0 10px 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 800px) {
+  .nav {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    justify-self: center;
+  }
+
+  /* Less side padding on the bar itself frees up room so the
+     links can be bigger and still fit on one row. */
+  .nav {
+    padding: 22px 10px;
+  }
+
+  .nav-links {
+    gap: 8px;
+    row-gap: 8px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+
+  .split,
+  .split.reverse .split-photo,
+  .product-grid {
+    grid-template-columns: 1fr;
+    order: 0;
+  }
+
+  .split {
+    display: block;
+  }
+
+  .split > * + * {
+    margin-top: 28px;
+  }
+
+  .link-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .spec-list .row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .spec-list dd {
+    text-align: left;
+  }
+}
+
+/* ---------- Timeline / map, small screens ----------
+   Kept at the end of the file on purpose: these override
+   base rules (.timeline-item, .timeline-card, .map-panel)
+   declared further up, and a media query doesn't win a
+   cascade tie on its own — only appearing later in the
+   file does. */
+@media (max-width: 640px) {
+  .timeline-card--photo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .timeline-photo {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Less indent and padding around each card, so there's
+     more room left for the text before it feels cramped. */
+  .timeline-item {
+    padding-left: 26px;
+  }
+
+  .timeline-card {
+    padding: 16px;
+  }
+
+  /* The map's own frame doesn't need as much breathing
+     room on a narrow screen — freeing that space lets the
+     map itself render bigger. */
+  .map-panel {
+    padding: 16px;
+  }
+
+  /* Less side padding everywhere on a narrow screen, so
+     content (the timeline cards, the map) has more room
+     instead of being squeezed by the same margins used on
+     a much wider desktop screen. */
+  .container {
+    padding: 0 20px;
+  }
+
+  .section {
+    padding: 56px 20px;
+  }
+
+  .contact-email {
+    font-size: 1.3rem;
+  }
+
+  /* On a narrow screen the caption sits close enough to the
+     centered scroll arrow above it that they'd touch without
+     this — push the arrow up just enough to clear it. */
+  .scroll-cue {
+    bottom: 52px;
+  }
+}
