@@ -454,3 +454,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+// ============================================
+// Language dropdown — navigates to the chosen
+// page on selection.
+// ============================================
+
+document.addEventListener("DOMContentLoaded", function () {
+  const langSelect = document.querySelector(".lang-select");
+  if (!langSelect) return;
+
+  langSelect.addEventListener("change", function () {
+    window.location.href = langSelect.value;
+  });
+});
