@@ -159,41 +159,6 @@ img {
   color: var(--text-invert);
 }
 
-.lang-switch {
-  justify-self: end;
-}
-
-.lang-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  color: var(--muted-invert);
-  font-family: inherit;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 500;
-  padding: 6px 28px 6px 12px;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a6ac93' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-}
-
-.lang-select:hover,
-.lang-select:focus {
-  color: var(--text-invert);
-  border-color: rgba(255, 255, 255, 0.5);
-  outline: none;
-}
-
-.lang-select option {
-  color: #1a1e14;
-  background: #fff;
-}
-
 /* ---------- Hero (full-bleed, dark overlay) ---------- */
 
 .hero {
@@ -985,11 +950,6 @@ img {
   .nav-links a {
     font-size: 0.9rem;
     letter-spacing: 0.02em;
-  }
-
-  .lang-switch {
-    justify-self: center;
-    margin-top: 10px;
   }
 
   .split,
