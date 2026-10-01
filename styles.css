@@ -429,7 +429,7 @@ img {
 .fruit-photo {
   width: 100%;
   max-width: 220px;
-  max-height: 220px;
+  height: 220px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
